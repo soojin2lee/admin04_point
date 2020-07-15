@@ -17,8 +17,8 @@ public class Point {
     private String status;
     private Date chgDate;
 
-    @PrePersist
-    public void onPrePersist(){
+    @PostPersist
+    public void onPostPersist(){
         if(this.getStatus().equals("saved")){
             Saved saved = new Saved();
             BeanUtils.copyProperties(this, saved);
