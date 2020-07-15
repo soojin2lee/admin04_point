@@ -1,6 +1,7 @@
 package bookrental;
 
 import bookrental.config.kafka.KafkaProcessor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -27,6 +28,12 @@ public class PolicyHandler{
             point.setStatus("saved");
             point.setUserId(returned.getUserId());
             pointRepo.save(point);
+
+            Saved saved = new Saved();
+            saved.setPoint(point.getPoint());
+            saved.setStatus("saved");
+            saved.setUserId(point.getUserId());
+            saved.publishAfterCommit();
         }
     }
 
