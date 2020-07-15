@@ -1,6 +1,8 @@
 
 package bookrental;
 
+import java.util.Date;
+
 public class Returned extends AbstractEvent {
 
     private Long id;
