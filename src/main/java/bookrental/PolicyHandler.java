@@ -14,6 +14,9 @@ public class PolicyHandler{
 
     @Autowired
     PointRepository pointRepo;
+    @Autowired
+    PointController pc;
+
     @StreamListener(KafkaProcessor.INPUT)
     public void onStringEventListener(@Payload String eventString){
 
@@ -27,13 +30,9 @@ public class PolicyHandler{
             point.setPoint(1);
             point.setStatus("saved");
             point.setUserId(returned.getUserId());
-            pointRepo.save(point);
+            System.out.println("point:"+point);
+            pc.saved(point);
 
-            Saved saved = new Saved();
-            saved.setPoint(point.getPoint());
-            saved.setStatus("saved");
-            saved.setUserId(point.getUserId());
-            saved.publishAfterCommit();
         }
     }
 
