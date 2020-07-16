@@ -7,6 +7,7 @@ import org.springframework.cloud.stream.annotation.StreamListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,6 +31,18 @@ public class PolicyHandler{
             point.setPoint(1);
             point.setStatus("saved");
             point.setUserId(returned.getUserId());
+            List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(returned.getUserId());
+            if(!pointList.isEmpty()){
+                if(pointList.get(0).getUserTotalPoint() != null){
+                    point.setUserTotalPoint(pointList.get(0).getUserTotalPoint()+1);
+                }
+                else{
+                    point.setUserTotalPoint(1);
+                }
+
+            }else{
+                point.setUserTotalPoint(1);
+            }
             System.out.println("point:"+point);
             pc.saved(point);
 

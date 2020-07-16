@@ -1,12 +1,32 @@
 
 package bookrental;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class Saved extends AbstractEvent {
 
     private Long id;
     private Long userId;
     private Integer point;
     private String status;
+    private Date chgDate;
+    private Integer userTotalPoint;
+
+    public Integer getUserTotalPoint() {
+        return userTotalPoint;
+    }
+
+    public void setUserTotalPoint(Integer userTotalPoint) {
+        this.userTotalPoint = userTotalPoint;
+    }
+    public Date getChgDate() {
+        return chgDate;
+    }
+
+    public void setChgDate(Date chgDate) {
+        this.chgDate = chgDate;
+    }
 
     public Long getId() {
         return id;
