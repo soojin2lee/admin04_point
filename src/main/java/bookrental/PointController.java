@@ -37,7 +37,7 @@ import java.util.Optional;
          }
 
      }else{
-         point.setUserTotalPoint(1);
+         point.setUserTotalPoint(savedPoint);
      }
 
    pointRepo.save(point);
@@ -48,21 +48,25 @@ import java.util.Optional;
  public Point used(@RequestBody Point postPoint) {
 
   Point point = new Point();
+     Integer usedPoint = postPoint.getPoint();
+     if(postPoint.getPoint() == null){
+         usedPoint = 1;
+     }
   point.setUserId(postPoint.getUserId());
   point.setStatus("used");
-  point.setPoint(postPoint.getPoint());
-     if(postPoint.getUserTotalPoint() == null){
-         List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(postPoint.getUserId());
-         if(!pointList.isEmpty()){
-             if(pointList.get(0).getUserTotalPoint() != null)
-             point.setUserTotalPoint(pointList.get(0).getUserTotalPoint()-postPoint.getPoint());
-         }else{
-             point.setUserTotalPoint(1);
+  point.setPoint(usedPoint);
+
+     List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(postPoint.getUserId());
+     if(!pointList.isEmpty()) {
+         if (pointList.get(0).getUserTotalPoint() != null) {
+             if (usedPoint <= pointList.get(0).getUserTotalPoint()) {
+                 point.setUserTotalPoint(pointList.get(0).getUserTotalPoint() - usedPoint);
+                 pointRepo.save(point); //가용한 포인트가 있는 경우에만 save
+             }
          }
-     }else{ //handler 통해서 넘어온 경우
-         point.setUserTotalPoint(postPoint.getUserTotalPoint());
      }
-  pointRepo.save(point);
+
+
   return point;
  }
 }
