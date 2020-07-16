@@ -19,19 +19,27 @@ import java.util.Optional;
  public Point saved(@RequestBody Point postPoint) {
 
    Point point = new Point();
-   point.setUserId(postPoint.getUserId());
-   point.setPoint(postPoint.getPoint());
-   point.setStatus(postPoint.getStatus());
-   if(postPoint.getUserTotalPoint() == null){
-       List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(postPoint.getUserId());
-       if(!pointList.isEmpty()){
-           point.setUserTotalPoint(pointList.get(0).getUserTotalPoint()+1);
-       }else{
-           point.setUserTotalPoint(1);
-       }
-   }else{ //handler 통해서 넘어온 경우
-       point.setUserTotalPoint(postPoint.getUserTotalPoint());
+   Integer savedPoint = postPoint.getPoint();
+   if(postPoint.getPoint() == null){
+       savedPoint = 1;
    }
+   point.setUserId(postPoint.getUserId());
+   point.setPoint(savedPoint);
+   point.setStatus(postPoint.getStatus());
+
+     List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(postPoint.getUserId());
+     if(!pointList.isEmpty()){
+         if(pointList.get(0).getUserTotalPoint() != null){
+             point.setUserTotalPoint(pointList.get(0).getUserTotalPoint()+savedPoint);
+         }
+         else{
+             point.setUserTotalPoint(savedPoint);
+         }
+
+     }else{
+         point.setUserTotalPoint(1);
+     }
+
    pointRepo.save(point);
    return point;
   }
