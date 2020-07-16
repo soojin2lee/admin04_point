@@ -69,4 +69,23 @@ import java.util.Optional;
 
   return point;
  }
+
+
+    @PostMapping("/points/cancel")
+    public Point cancelled(@RequestBody Point postPoint) {
+
+        Point point = new Point();
+        point.setUserId(postPoint.getUserId());
+        point.setStatus("cancelled");
+        List<Point> pointList = pointRepo.findByUserIdOrderByChgDateDesc(postPoint.getUserId());
+        if(!pointList.isEmpty()) {
+            if (pointList.get(0).getPoint() != null) { //마지막에 받았던 포인트
+                    point.setUserTotalPoint(pointList.get(0).getUserTotalPoint() - pointList.get(0).getPoint());
+                    point.setPoint(0);
+                    pointRepo.save(point); //가용한 포인트가 있는 경우에만 save
+                }
+        }
+        return point;
+    }
+
 }

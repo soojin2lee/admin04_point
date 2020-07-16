@@ -54,6 +54,10 @@ public class Point {
             Used used = new Used();
             BeanUtils.copyProperties(this, used);
             used.publishAfterCommit();
+        }else if(this.getStatus().equals("cancelled")){
+            Cancelled cancelled = new Cancelled();
+            BeanUtils.copyProperties(this, cancelled);
+            cancelled.publishAfterCommit();
         }
 
     }
