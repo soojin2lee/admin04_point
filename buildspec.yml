@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   variables:
-    _PROJECT_NAME: "soojin-point"
+    _PROJECT_NAME: "admin04_point"
 
 phases:
   install:
